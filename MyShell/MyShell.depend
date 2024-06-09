@@ -1,0 +1,86 @@
+# depslib dependency file v1.0
+1714666712 source:f:\tailieubachkhoa\hdh\myshell\main.cpp
+	<iostream>
+	<windows.h>
+	<vector>
+	<string>
+	<fstream>
+	<ctime>
+	<iomanip>
+	<signal.h>
+	<algorithm>
+
+1714668496 source:f:\tailieubachkhoa\hdh\shellproject_hdh\myshell\main.cpp
+	<iostream>
+	<windows.h>
+	<vector>
+	<string>
+	<fstream>
+	<ctime>
+	<iomanip>
+	<signal.h>
+	<algorithm>
+
+1717922993 source:e:\tailieubachkhoa\hdh\shellproject_hdh\myshell\function.cpp
+	<iostream>
+	<windows.h>
+	<vector>
+	<string>
+	<fstream>
+	<ctime>
+	<iomanip>
+	<signal.h>
+	<algorithm>
+	<stdio.h>
+	"function.h"
+
+1717922210 e:\tailieubachkhoa\hdh\shellproject_hdh\myshell\function.h
+	<iostream>
+	<windows.h>
+	<vector>
+	<string>
+	<fstream>
+	<ctime>
+	<iomanip>
+	<signal.h>
+	<algorithm>
+	<stdio.h>
+
+1717923033 source:e:\tailieubachkhoa\hdh\shellproject_hdh\myshell\main.cpp
+	<iostream>
+	<windows.h>
+	<vector>
+	<string>
+	<fstream>
+	<ctime>
+	<iomanip>
+	<signal.h>
+	<algorithm>
+	<stdio.h>
+	"function.h"
+
+1717910015 source:e:\tailieubachkhoa\hdh\shellproject_hdh\myshell\variables.cpp
+	<iostream>
+	<windows.h>
+	<vector>
+	<string>
+	<fstream>
+	<ctime>
+	<iomanip>
+	<signal.h>
+	<algorithm>
+	<stdio.h>
+	"variables.h"
+
+1717910232 e:\tailieubachkhoa\hdh\shellproject_hdh\myshell\variables.h
+	<iostream>
+	<windows.h>
+	<vector>
+	<string>
+	<fstream>
+	<ctime>
+	<iomanip>
+	<signal.h>
+	<algorithm>
+	<stdio.h>
+
