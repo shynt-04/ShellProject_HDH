@@ -16,7 +16,7 @@
 using namespace std;
 
 inline bool shellStatus = true;
-const int NUMBER_OF_COMMANDS = 15;
+const int NUMBER_OF_COMMANDS = 17;
 
 // trang thai cua shell hien tai
 // true: live
@@ -55,7 +55,10 @@ inline string cmdLst[NUMBER_OF_COMMANDS] = {
     "list",
     "path",
     "addpath",
-    "cd"
+    "cd",
+    "delete",
+    "move"
+
 };
 
 inline string instuctionLst[NUMBER_OF_COMMANDS] = {
@@ -74,6 +77,8 @@ inline string instuctionLst[NUMBER_OF_COMMANDS] = {
     "get environment PATH variable",
     "add environment PATH variable",
     "change current directory"
+    "delete a file",
+    "move a file to other directory"
 };
 
 // Command handle
