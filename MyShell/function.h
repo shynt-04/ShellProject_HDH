@@ -92,7 +92,8 @@ void _list();
 void _path();
 void _addpath(string s);
 void _cd(string s);
-
+void _delete(string s); 
+void _move(string s);
 // Other utilities
 vector<string> shell_read_command();
 string remove_space(string s);
