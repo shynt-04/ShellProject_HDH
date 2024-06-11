@@ -132,19 +132,29 @@ void _cat(string inst) {
         cout << errorMsg << "Invalid option" << defaultCor << "\n";
         cout << usageMsg << "cat <path-to-file>" << defaultCor << "\n";
         return;
-    }
-    string path = args[1];
-    ifstream myFile(path);
-    if (myFile.is_open()) {
-        string line;
-        cout << color[4];
-        while(getline(myFile, line)) {
-            cout << line << "\n";
+    }else{
+        
+    
+        string path = args[1];
+        string tail = path.substr(path.length()-3,3);
+        // cout << tail << endl;
+        if(tail != "bat" && tail != "txt"){
+            cout << errorMsg << "Invalid option" << defaultCor << "\n";
+            cout << usageMsg << "cat <path-to-file>" << defaultCor << "\n";
+            return;
         }
-        cout << defaultCor;
-        myFile.close();
-    } else {
-        cout << errorMsg << "Unable to open file" << defaultCor << "\n";
+        ifstream myFile(path);
+        if (myFile.is_open()) {
+            string line;
+            cout << color[4];
+            while(getline(myFile, line)) {
+                cout << line << "\n";
+            }
+            cout << defaultCor;
+            myFile.close();
+        } else {
+            cout << errorMsg << "Unable to open file" << defaultCor << "\n";
+        }
     }
 }
 
@@ -472,5 +482,19 @@ void _cd(string inst) {
         } else {
             currentDir = new_dir;
         }
+    }
+}
+
+void _echo(string inst){
+    vector<string>args = split_space(inst);
+    if(size(args) < 2){
+        cout << "echo is on" << endl;
+        return;
+    }else{
+        auto it = args.begin() +1;
+        for( ; it != args.end() ; it++){
+            cout << *it << " " ;
+        }
+        return;
     }
 }
