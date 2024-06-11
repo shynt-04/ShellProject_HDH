@@ -56,7 +56,7 @@ inline string cmdLst[NUMBER_OF_COMMANDS] = {
     "path",
     "addpath",
     "cd",
-    "echo"
+    "echo",
     "delete",
     "move"s
 

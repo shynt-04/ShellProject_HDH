@@ -527,7 +527,7 @@ void _cd(string inst) {
 void _echo(string inst){
     vector<string>args = split_space(inst);
     if(size(args) < 2){
-        cout << "echo is on" << endl;
+        cout << "echo is on";
         return;
     }else{
         auto it = args.begin() +1;
