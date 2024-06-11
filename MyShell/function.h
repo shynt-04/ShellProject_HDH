@@ -76,7 +76,7 @@ inline string instuctionLst[NUMBER_OF_COMMANDS] = {
     "list all background processes",
     "get environment PATH variable",
     "add environment PATH variable",
-    "change current directory"
+    "change current directory",
     "delete a file",
     "move a file to other directory"
 };
