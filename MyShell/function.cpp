@@ -56,7 +56,16 @@ void _time() {
     printf("Current time: %02d:%02d:%02d\n", st.wHour, st.wMinute, st.wSecond);
     printf("Current date: %02d/%02d/%04d\n", st.wDay, st.wMonth, st.wYear);
 
-int hour, minute, second;
+    printf("Do you want to change time? (y/n) - ");
+    char ans;
+    scanf("%c",&ans);
+    if(ans!='n' && ans !='y'){
+        printf("Invalid answer.\n");
+        return;
+    }
+    if(ans == 'n') return;
+    
+    int hour, minute, second;
     printf("Enter new time: ");
     if(scanf("%d:%d:%d", &hour,&minute,&second)==3){
         st.wHour = hour;
@@ -67,7 +76,7 @@ int hour, minute, second;
             printf("Time successfully updated.\n");
         }
         else{
-            printf("Failed to updated time. Error code: %d\n", GetLastError());
+            printf("Failed to updated time.\n" );
         }
     }
 
@@ -81,7 +90,7 @@ int hour, minute, second;
         if (SetLocalTime(&st)) {
             printf("Date successfully updated.\n");
         } else {
-            printf("Failed to update date. Error code: %d\n", GetLastError());
+            printf("Failed to update date.\n" );
         }
     } else {
         printf("Invalid date format. Please use dd/mm/yyyy.\n");
