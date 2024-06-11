@@ -158,6 +158,14 @@ void shell_execute_single(string command) {
         _echo(command);
         return;
     }
+	if(strncmp(command_chr,"delete",6)==0){
+        _delete(command);
+        return;
+    }
+    if (strncmp(command_chr, "move", 4) == 0) {  
+        _move(command);
+        return;
+    }
     cout << errorMsg << "Invalid command" << defaultCor << "\n";
     cout << color[2] << "Please use 'help' command for more information" << defaultCor << "\n";
 }

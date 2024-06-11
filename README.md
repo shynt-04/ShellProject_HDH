@@ -3,7 +3,6 @@
 ## Install and Usage
 
 1. Clone the repo: `git clone https://github.com/shynt-04/ShellProject_HDH.git`
-
 2. Go to folder `MyShell`
 
 3. Run command `g++ main.cpp function.cpp -o tinyShell.exe -Wall -std=gnu++17`
@@ -13,6 +12,14 @@
 ## Command instruction
 
 For for infomation, please use `help` in `tinyShell` terminal
+
+## Prerequisite
+
+1. Platform: `Windows`
+
+2. gcc version: `>= 7.0`
+
+3. `Windows API`
 
 ## Bug
 

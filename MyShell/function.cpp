@@ -51,14 +51,53 @@ void _exit() {
     Ham tra lai thoi gian hien tai
 */
 void _time() {
-    time_t tt;
-    struct tm* ti;
-    time(&tt);
-    ti = localtime(&tt);
-    cout << color[2];
-    cout << "Current date-time: " << asctime(ti);
-    cout << defaultCor;
+    SYSTEMTIME st;
+    GetLocalTime(&st);
+    printf("Current time: %02d:%02d:%02d\n", st.wHour, st.wMinute, st.wSecond);
+    printf("Current date: %02d/%02d/%04d\n", st.wDay, st.wMonth, st.wYear);
+
+    printf("Do you want to change time? (y/n) - ");
+    char ans;
+    scanf("%c",&ans);
+    if(ans!='n' && ans !='y'){
+        printf("Invalid answer.\n");
+        return;
+    }
+    if(ans == 'n') return;
+    
+    int hour, minute, second;
+    printf("Enter new time: ");
+    if(scanf("%d:%d:%d", &hour,&minute,&second)==3){
+        st.wHour = hour;
+        st.wMinute = minute;
+        st.wSecond = second;
+
+        if(SetLocalTime(&st)){
+            printf("Time successfully updated.\n");
+        }
+        else{
+            printf("Failed to updated time.\n" );
+        }
+    }
+
+    int day,month,year;
+    printf("Enter new date (dd/mm/yyyy): ");
+    if (scanf("%d/%d/%d", &day, &month, &year) == 3) {
+        st.wDay = day;
+        st.wMonth = month;
+        st.wYear = year;
+
+        if (SetLocalTime(&st)) {
+            printf("Date successfully updated.\n");
+        } else {
+            printf("Failed to update date.\n" );
+        }
+    } else {
+        printf("Invalid date format. Please use dd/mm/yyyy.\n");
+    }
+
 }
+
 
 
 /*
@@ -496,5 +535,41 @@ void _echo(string inst){
             cout << *it << " " ;
         }
         return;
+    }
+}
+
+void _delete(string inst) {
+    vector<string> args = split_space(inst);
+    if (sz(args) != 2) {
+        cout << errorMsg << "Invalid option" << defaultCor << "\n";
+        cout << usageMsg << "delete <path-to-file>" << defaultCor << "\n";
+        return;
+    }
+    string filePath = args[1];
+    if (DeleteFile(filePath.c_str())) {
+        cout << color[2] << "File " << filePath << " deleted successfully" << defaultCor << "\n";
+    } else {
+        cout << errorMsg << "Unable to delete file " << filePath << defaultCor << "\n";
+    }
+}
+
+void _move(string inst) {
+    size_t pos = inst.find('>');
+    if (pos == string::npos) {
+        cout << errorMsg << "Invalid command format" << defaultCor << "\n";
+        cout << usageMsg << "move <source> > <destination>" << defaultCor << "\n";
+        return;
+    }
+    string source = inst.substr(5, pos-5); // source duoc lay tu source trong lenh "move source > destination"
+    string destination = inst.substr(pos + 1);
+
+    source = remove_space(source);
+    destination = remove_space(destination);
+    
+
+    if (MoveFile(source.c_str(), destination.c_str())) {
+        cout << color[2] << "File moved from " << source << " to " << destination << " successfully" << defaultCor << "\n";
+    } else {
+        cout << errorMsg << "Unable to move file from " << source << " to " << destination << defaultCor << "\n";
     }
 }

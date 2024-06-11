@@ -16,7 +16,7 @@
 using namespace std;
 
 inline bool shellStatus = true;
-const int NUMBER_OF_COMMANDS = 16;
+const int NUMBER_OF_COMMANDS = 18;
 
 // trang thai cua shell hien tai
 // true: live
@@ -57,6 +57,9 @@ inline string cmdLst[NUMBER_OF_COMMANDS] = {
     "addpath",
     "cd",
     "echo"
+    "delete",
+    "move"s
+
 };
 
 inline string instuctionLst[NUMBER_OF_COMMANDS] = {
@@ -75,7 +78,9 @@ inline string instuctionLst[NUMBER_OF_COMMANDS] = {
     "get environment PATH variable",
     "add environment PATH variable",
     "change current directory",
-    "displays messages, or turns command echoing on or off"
+    "displays messages, checks echo status",
+    "delete a file",
+    "move a file to other directory"
 };
 
 // Command handle
@@ -95,7 +100,8 @@ void _path();
 void _addpath(string s);
 void _cd(string s);
 void _echo(string s);
-
+void _delete(string s); 
+void _move(string s);
 // Other utilities
 vector<string> shell_read_command();
 string remove_space(string s);
