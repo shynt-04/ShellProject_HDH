@@ -53,6 +53,7 @@ void tiny_help(string inst) {
     cout << color[5] << "Run mode: \n";
     cout << color[5] << "-f" << "\t-\t" << "Run a process in foreground mode" << "\n";
     cout << color[5] << "-b" << "\t-\t" << "Run a process in background mode" << "\n";
+    cout << color[5] << "<cmd line: >" << "\t-\t" << "Execute command line in PATH" << "\n";
     cout << defaultCor;
 }
 
