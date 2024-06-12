@@ -42,6 +42,7 @@ void _exit() {
     cout << color[0];
     cout << "*** Exit tinyShell ***" << "\n";
     cout << defaultCor;
+    Sleep(3000);
     shellStatus = false;
     // Dong tat ca cac process/thread dang thuc hien
     for (int i = (int) listProcess.size() - 1; i >= 0; -- i) {
