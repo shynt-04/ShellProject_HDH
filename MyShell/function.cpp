@@ -219,9 +219,9 @@ void tiny_run(string inst) {
         string fileName = args[1];
         runDotBat(fileName);
     } else if (strstr(inst.c_str(), ".exe") != NULL) {
-        if (sz(args) != 3 || (args[1] != "-f" && args[1] != "-b")) {
+        if (sz(args) < 3 || (args[1] != "-f" && args[1] != "-b")) {
             cout << errorMsg << "Invalid option" << defaultCor << "\n";
-            cout << color[5] << "USAGE for .exe: run <OPTION> <exeFile>" << "\n";
+            cout << color[5] << "USAGE for .exe: run <OPTION> <exeFile> <ARGUMENT_1> <ARGUMENT_2>" << "\n";
             cout << "OPTION for .exe:" << "\n";
             cout << "  -f: foreground mode" << "\n";
             cout << "  -b: background mode" << defaultCor << "\n";
@@ -498,4 +498,26 @@ void tiny_echo(string inst){
         }
         return;
     }
+}
+
+/*
+    chay exe co trong PATH
+*/
+int tiny_run_exe_in_PATH(string inst) {
+    STARTUPINFO si;
+    PROCESS_INFORMATION pi;
+    ZeroMemory(&si, sizeof(si));
+    si.cb = sizeof(si);
+    CreateProcess(NULL, const_cast<char *>((path + "\\" + inst).c_str), NULL, NULL, FALSE, 0, NULL, NULL, (LPSTARTUPINFOA) &si, &pi);
+    for (auto path : shell_path) {
+        ZeroMemory(&si, sizeof(si));
+        si.cb = sizeof(si);
+        CreateProcess(NULL, const_cast<char *>((path + "\\" + inst).c_str), NULL, NULL, FALSE, 0, NULL, NULL, (LPSTARTUPINFOA) &si, &pi);
+        if (pi.dwProcessId) break;
+    }
+    SetConsoleCtrlHandler(CtrlHandler, TRUE);
+    WaitForSingleObject(pi.hProcess, INFINITE);
+    TerminateProcess(pi.hProcess, 0);
+    CloseHandle(pi.hProcess);
+    CloseHandle(pi.hThread);
 }

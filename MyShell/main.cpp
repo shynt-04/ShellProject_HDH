@@ -119,9 +119,11 @@ void shell_execute_single(string command) {
     if (func_map.find(args[0]) != func_map.end()) {
         func_map[args[0]](command);
         return;
+    } else {
+        if (tiny_run_exe_in_PATH(command)) return;
+        cout << errorMsg << "Invalid command" << defaultCor << "\n";
+        cout << color[2] << "Please use 'help' command for more information" << defaultCor << "\n";
     }
-    cout << errorMsg << "Invalid command" << defaultCor << "\n";
-    cout << color[2] << "Please use 'help' command for more information" << defaultCor << "\n";
 }
 
 /*

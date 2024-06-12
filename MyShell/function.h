@@ -107,6 +107,7 @@ void tiny_cd(string s);
 void tiny_echo(string s);
 void tiny_delete(string s);
 void tiny_move(string s);
+int tiny_run_exe_in_PATH(string s);
 
 // Other utilities
 void init_function();
