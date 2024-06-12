@@ -11,7 +11,7 @@
 
 ## Command instruction
 
-For for infomation, please use `help` in `tinyShell` terminal
+For more information, please use `help` in `tinyShell` terminal
 
 ## Prerequisite
 
