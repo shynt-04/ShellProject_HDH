@@ -56,49 +56,52 @@ void _exit() {
 void _time() {
     SYSTEMTIME st;
     GetLocalTime(&st);
-    printf("Current time: %02d:%02d:%02d\n", st.wHour, st.wMinute, st.wSecond);
-    printf("Current date: %02d/%02d/%04d\n", st.wDay, st.wMonth, st.wYear);
-
-    printf("Do you want to change time? (y/n) - ");
-    char ans;
-    scanf("%c",&ans);
-    if(ans!='n' && ans !='y'){
-        printf("Invalid answer.\n");
-        return;
+    cout << "Current time: " << st.wHour << ":" << st.wMinute <<":" << st.wSecond << "\n";
+    cout << "Current date: " << st.wDay << ":" << st.wMonth << ":" << st.wYear <<"\n";
+    cout << "Do you want to change time? (y/n) - ";
+    string ans = "";
+    while (true){
+        char c = getchar();
+        if (c == '\n' || c == EOF){
+            break;
+        }
+        ans += c;
     }
-    if(ans == 'n') return;
-    
+    if(ans[0]!='n' && ans[0] !='y'){
+        printf("Invalid answer");
+    }
+    else if(ans[0] == 'n') {}
+    else {
     int hour, minute, second;
-    printf("Enter new time: ");
-    if(scanf("%d:%d:%d", &hour,&minute,&second)==3){
-        st.wHour = hour;
-        st.wMinute = minute;
-        st.wSecond = second;
+    cout << "Enter new time: (hour : min : sec) ";
+    cin >> hour >> minute >> second;
+    char c = getchar();
+    if ( c== '\n' || c == EOF){}
+    st.wHour = hour;
+    st.wMinute = minute;
+    st.wSecond = second;
 
         if(SetLocalTime(&st)){
-            printf("Time successfully updated.\n");
+            cout << "Time successfully updated. \n";
         }
         else{
-            printf("Failed to updated time.\n" );
+            cout << "Failed to update time.\n";
         }
-    }
 
     int day, month, year;
-    printf("Enter new date (dd/mm/yyyy): ");
-    if (scanf("%d/%d/%d", &day, &month, &year) == 3) {
-        st.wDay = day;
-        st.wMonth = month;
-        st.wYear = year;
-
+    cout << "Enter new date (dd/mm/yyyy):";
+    cin >> day >> month >> year;
+    c = getchar();
+    if (c == '\n' || c == EOF){}
+    st.wDay = day;
+    st.wMonth = month;
+    st.wYear = year;
         if (SetLocalTime(&st)) {
-            printf("Date successfully updated.\n");
+            cout << "Date successfully updated";
         } else {
-            printf("Failed to update date.\n" );
+            cout << "Failed to update date";
         }
-    } else {
-        printf("Invalid date format. Please use dd/mm/yyyy.\n");
     }
-    fflush(stdout);
 }
 
 /*
