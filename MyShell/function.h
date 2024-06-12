@@ -32,6 +32,8 @@ inline vector<process> listProcess;
 inline process fgProcess; // foreground process, used to terminate process when press CTRL-C
 inline string currentDir;
 
+inline vector<string> shell_path;
+
 // beautifier
 inline string defaultCor = "\033[0m";
 inline string color[10] = {"\033[1;31m", "\033[1;32m", "\033[1;33m", "\033[1;34m", "\033[1;35m", "\033[1;36m"};
@@ -98,7 +100,9 @@ void _addpath(string s);
 void _cd(string s);
 void _delete(string s); 
 void _move(string s);
+
 // Other utilities
+vector<string> init_shell_path();
 vector<string> shell_read_command();
 string remove_space(string s);
 vector<string> remove_space(vector<string> commandList);
@@ -110,6 +114,7 @@ vector<string> split_space(string inst);
 string getPath();
 string getFileName(string s);
 string getPreviousPath(string s);
-void my_handler(sig_atomic_t s);
+bool checkDir(string s);
+BOOL WINAPI CtrlHandler(DWORD fdwCtrlType);
 
 #endif
