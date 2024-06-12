@@ -8,6 +8,9 @@
 #include <signal.h>
 #include <algorithm>
 #include <stdio.h>
+#include <map>
+#include <functional>
+
 #include "function.h"
 
 #define sz(x) (int) x.size()
@@ -17,7 +20,8 @@ using namespace std;
 /******************************/
 int main(int argc, char *argv[]) {
     SetConsoleTitle("Project: Tiny Shell");
-    _clear();
+    tiny_clear("");
+    init_function();
     shell_path = init_shell_path();
     currentDir = getPath();
     do {
@@ -42,7 +46,7 @@ vector<string> init_shell_path() {
     vector<string> path;
     for (auto c : path_str) {
         if (c == ';') {
-            if (cur_path != "") 
+            if (cur_path != "")
                 path.push_back(cur_path);
             cur_path = "";
         } else cur_path += c;
@@ -111,77 +115,9 @@ void slow_type(string msg) {
 }
 
 void shell_execute_single(string command) {
-    const char* command_chr = command.c_str();
-    if (strncmp(command_chr, "help", 4) == 0) {
-        _help();
-        return;
-    }
-    if (strncmp(command_chr, "exit", 4) == 0) {
-        _exit();
-        return;
-    }
-    if (strncmp(command_chr, "time", 4) == 0) {
-        _time();
-        return;
-    }
-    if (strncmp(command_chr, "dir", 3) == 0) {
-        _dir(command);
-        return;
-    }
-    if (strncmp(command_chr, "pwd", 3) == 0) {
-        _pwd();
-        return;
-    }
-    if (strncmp(command_chr, "cat", 3) == 0) {
-        _cat(command);
-        return;
-    }
-    if (strncmp(command_chr, "clear", 5) == 0) {
-        _clear();
-        return;
-    }
-    if (strncmp(command_chr, "run", 3) == 0) {
-        _run(command);
-        return;
-    }
-    if (strncmp(command_chr, "stop", 4) == 0) {
-        _stop(command);
-        return;
-    }
-    if (strncmp(command_chr, "resume", 6) == 0) {
-        _resume(command);
-        return;
-    }
-    if (strncmp(command_chr, "kill", 4) == 0) {
-        _kill(command);
-        return;
-    }
-    if (strncmp(command_chr, "list", 4) == 0) {
-        _list();
-        return;
-    }
-    if (strncmp(command_chr, "path", 4) == 0) {
-        _path();
-        return;
-    }
-    if (strncmp(command_chr, "addpath", 7) == 0) {
-        _addpath(command);
-        return;
-    }
-    if (strncmp(command_chr, "cd", 2) == 0) {
-        _cd(command);
-        return;
-    }
-	if (strncmp(command_chr, "delete", 6)==0){
-        _delete(command);
-        return;
-    }
-    if (strncmp(command_chr, "move", 4) == 0) {  
-        _move(command);
-        return;
-    }
-    if (strncmp(command_chr, "echo", 4) == 0) {  
-        _echo(command);
+    vector<string> args = split_space(command);
+    if (func_map.find(args[0]) != func_map.end()) {
+        func_map[args[0]](command);
         return;
     }
     cout << errorMsg << "Invalid command" << defaultCor << "\n";

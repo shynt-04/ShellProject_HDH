@@ -11,6 +11,8 @@
 #include <signal.h>
 #include <algorithm>
 #include <stdio.h>
+#include <map>
+#include <functional>
 #define sz(x) (int) x.size()
 
 using namespace std;
@@ -84,28 +86,30 @@ inline string instuctionLst[NUMBER_OF_COMMANDS] = {
     "move a file to other directory"
 };
 
-// Command handle
-void _help();
-void _exit();
-void _time();
-void _dir(string s);
-void _pwd();
-void _cat(string s);
-void _clear();
-void _run(string s);
-void _stop(string s);
-void _resume(string s);
-void _kill(string s);
-void _list();
-void _path();
-void _addpath(string s);
-void _cd(string s);
-void _echo(string s);
-void _delete(string s); 
-void _move(string s);
+inline map<string, function<void(string s)> > func_map;
 
+// Command handle
+void tiny_help(string s);
+void tiny_exit(string s);
+void tiny_time(string s);
+void tiny_dir(string s);
+void tiny_pwd(string s);
+void tiny_cat(string s);
+void tiny_clear(string s);
+void tiny_run(string s);
+void tiny_stop(string s);
+void tiny_resume(string s);
+void tiny_kill(string s);
+void tiny_list(string s);
+void tiny_path(string s);
+void tiny_addpath(string s);
+void tiny_cd(string s);
+void tiny_echo(string s);
+void tiny_delete(string s);
+void tiny_move(string s);
 
 // Other utilities
+void init_function();
 vector<string> init_shell_path();
 vector<string> shell_read_command();
 string remove_space(string s);

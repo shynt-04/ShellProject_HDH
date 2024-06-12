@@ -8,15 +8,38 @@
 #include <signal.h>
 #include <algorithm>
 #include <stdio.h>
+#include <map>
+#include <functional>
 
 #include "function.h"
 
 using namespace std;
 
+void init_function() {
+    func_map["help"] = tiny_help;
+    func_map["exit"] = tiny_exit;
+    func_map["time"] = tiny_time;
+    func_map["cd"] = tiny_cd;
+    func_map["dir"] = tiny_dir;
+    func_map["pwd"] = tiny_pwd;
+    func_map["clear"] = tiny_clear;
+    func_map["cat"] = tiny_cat;
+    func_map["run"] = tiny_run;
+    func_map["stop"] = tiny_stop;
+    func_map["resume"] = tiny_resume;
+    func_map["kill"] = tiny_kill;
+    func_map["list"] = tiny_list;
+    func_map["path"] = tiny_path;
+    func_map["addpath"] = tiny_addpath;
+    func_map["echo"] = tiny_echo;
+    func_map["delete"] = tiny_delete;
+    func_map["move"] = tiny_move;
+}
+
 /*
     Hien bang huong dan
 */
-void _help() {
+void tiny_help(string inst) {
     cout << color[2];
     cout <<   "############################\n";
     slow_type("WELCOME TO OUR SHELL PROJECT\n");
@@ -36,11 +59,11 @@ void _help() {
 /*
     Thoat chuong trinh tinyShell
 */
-void _exit() {
+void tiny_exit(string inst) {
     cout << color[0];
     cout << "*** Exit tinyShell ***" << "\n";
     cout << defaultCor;
-    Sleep(3000);
+    Sleep(1000);
     shellStatus = false;
     // Dong tat ca cac process/thread dang thuc hien
     for (int i = (int) listProcess.size() - 1; i >= 0; -- i) {
@@ -53,7 +76,7 @@ void _exit() {
 /*
     Ham tra lai thoi gian hien tai
 */
-void _time() {
+void tiny_time(string inst) {
     SYSTEMTIME st;
     GetLocalTime(&st);
     cout << "Current time: " << st.wHour << ":" << st.wMinute <<":" << st.wSecond << "\n";
@@ -107,7 +130,7 @@ void _time() {
 /*
     Liet ke file va subdirectories
 */
-void _dir(string inst) {
+void tiny_dir(string inst) {
     vector<string> args = split_space(inst);
     string path;
     if (sz(args) < 2) path = currentDir;
@@ -142,7 +165,7 @@ void _dir(string inst) {
 /*
     Ham nay goi den ham getPath()
 */
-void _pwd() {
+void tiny_pwd(string inst) {
     cout << color[2];
     cout << "Current working directory: " << currentDir << "\n";
     cout << defaultCor;
@@ -151,7 +174,7 @@ void _pwd() {
 /*
     Clear man hinh
 */
-void _clear() {
+void tiny_clear(string inst) {
     system("cls");
 }
 
@@ -159,7 +182,7 @@ void _clear() {
 /*
     In ra file yeu cau, can duong dan day du hoac file nam trong duong dan hien tai
 */
-void _cat(string inst) {
+void tiny_cat(string inst) {
     vector<string> args = split_space(inst);
     if (sz(args) != 2) {
         cout << errorMsg << "Invalid option" << defaultCor << "\n";
@@ -185,7 +208,7 @@ void _cat(string inst) {
 /*
     Chay file .exe va file .bat
 */
-void _run(string inst) {
+void tiny_run(string inst) {
     vector<string> args = split_space(inst);
     if (strstr(inst.c_str(), ".bat") != NULL) {
         if (sz(args) != 2) {
@@ -208,13 +231,15 @@ void _run(string inst) {
         PROCESS_INFORMATION pi;
         ZeroMemory(&si, sizeof(si));
         si.cb = sizeof(si);
+        int console_type = 0;
+        if (args[1] == "-b") console_type = CREATE_NEW_CONSOLE;
         string exeFile = args[2];
-        CreateProcess((currentDir + "\\" + exeFile).c_str(), NULL, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, (LPSTARTUPINFOA) &si, &pi);
+        CreateProcess((currentDir + "\\" + exeFile).c_str(), NULL, NULL, NULL, FALSE, console_type, NULL, NULL, (LPSTARTUPINFOA) &si, &pi);
         if (pi.dwProcessId == 0) {
             for (auto path : shell_path) {
                 ZeroMemory(&si, sizeof(si));
                 si.cb = sizeof(si);
-                CreateProcess((path + "\\" + exeFile).c_str(), NULL, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, (LPSTARTUPINFOA) &si, &pi);
+                CreateProcess((path + "\\" + exeFile).c_str(), NULL, NULL, NULL, FALSE, console_type, NULL, NULL, (LPSTARTUPINFOA) &si, &pi);
                 if (pi.dwProcessId) break;
             }
         }
@@ -243,7 +268,7 @@ void _run(string inst) {
 /*
     Dung mot tien trinh background
 */
-void _stop(string inst) {
+void tiny_stop(string inst) {
     vector<string> args = split_space(inst);
     if (sz(args) != 2) {
         cout << errorMsg << "Invalid option" << defaultCor << "\n";
@@ -269,7 +294,7 @@ void _stop(string inst) {
 /*
     Tiep tuc mot tien trinh background dang stop
 */
-void _resume(string inst) {
+void tiny_resume(string inst) {
     vector<string> args = split_space(inst);
     if (sz(args) != 2) {
         cout << errorMsg << "Invalid option" << defaultCor << "\n";
@@ -295,7 +320,7 @@ void _resume(string inst) {
 /*
     Dung vinh vien mot tien trinh background xoa khoi list
 */
-void _kill(string inst) {
+void tiny_kill(string inst) {
     vector<string> args = split_space(inst);
     if (sz(args) > 2) {
         cout << errorMsg << "Invalid option" << defaultCor << "\n";
@@ -320,7 +345,7 @@ void _kill(string inst) {
 /*
     Hien thi tat ca cac process dang chay ngam
 */
-void _list() {
+void tiny_list(string inst) {
     cout << color[2];
     cout << "\tID\t\t\tNAME\t\t\tSTATUS\n\n";
     for (int i = listProcess.size() - 1; i >= 0; -- i) {
@@ -350,9 +375,9 @@ void _list() {
 }
 
 /*
-    bien PATH trong shell hien tai 
+    bien PATH trong shell hien tai
 */
-void _path() {
+void tiny_path(string inst) {
     cout << color[2];
     cout << "Value of PATH is:\n";
     for (auto path : shell_path) {
@@ -364,7 +389,7 @@ void _path() {
 /*
     Khong anh huong den system va chi tac dong trong shell, PATH se reset lai ban dau (init_shell_path) khi khoi tao shell moi
 */
-void _addpath(string inst) {
+void tiny_addpath(string inst) {
     vector<string> args = split_space(inst);
     if (sz(args) != 2) {
         cout << errorMsg << "Invalid option" << defaultCor << "\n";
@@ -390,7 +415,7 @@ void _addpath(string inst) {
     chuyen directory
 */
 
-void _cd(string inst) {
+void tiny_cd(string inst) {
     vector<string> args = split_space(inst);
     if (sz(args) != 2) {
         cout << errorMsg << "Invalid option" << defaultCor << "\n";
@@ -423,7 +448,7 @@ void _cd(string inst) {
         }
     }
 }
-void _delete(string inst) {
+void tiny_delete(string inst) {
     vector<string> args = split_space(inst);
     if (sz(args) != 2) {
         cout << errorMsg << "Invalid option" << defaultCor << "\n";
@@ -439,7 +464,7 @@ void _delete(string inst) {
     }
 }
 
-void _move(string inst) {
+void tiny_move(string inst) {
     size_t pos = inst.find('>');
     if (pos == string::npos) {
         cout << errorMsg << "Invalid command format" << defaultCor << "\n";
@@ -451,7 +476,7 @@ void _move(string inst) {
 
     source = remove_space(source);
     destination = remove_space(destination);
-    
+
 
     if (MoveFile(source.c_str(), destination.c_str())) {
         cout << color[2] << "File moved from " << source << " to " << destination << " successfully" << defaultCor << "\n";
@@ -461,7 +486,7 @@ void _move(string inst) {
 }
 
 // vong lai
-void _echo(string inst){
+void tiny_echo(string inst){
     vector<string>args = split_space(inst);
     if(size(args) < 2){
         cout << "echo is on";

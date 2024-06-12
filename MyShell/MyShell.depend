@@ -21,7 +21,7 @@
 	<signal.h>
 	<algorithm>
 
-1717922993 source:e:\tailieubachkhoa\hdh\shellproject_hdh\myshell\function.cpp
+1718200390 source:e:\tailieubachkhoa\hdh\shellproject_hdh\myshell\function.cpp
 	<iostream>
 	<windows.h>
 	<vector>
@@ -32,9 +32,11 @@
 	<signal.h>
 	<algorithm>
 	<stdio.h>
+	<map>
+	<functional>
 	"function.h"
 
-1717922210 e:\tailieubachkhoa\hdh\shellproject_hdh\myshell\function.h
+1718200412 e:\tailieubachkhoa\hdh\shellproject_hdh\myshell\function.h
 	<iostream>
 	<windows.h>
 	<vector>
@@ -45,8 +47,10 @@
 	<signal.h>
 	<algorithm>
 	<stdio.h>
+	<map>
+	<functional>
 
-1717923033 source:e:\tailieubachkhoa\hdh\shellproject_hdh\myshell\main.cpp
+1718199946 source:e:\tailieubachkhoa\hdh\shellproject_hdh\myshell\main.cpp
 	<iostream>
 	<windows.h>
 	<vector>
@@ -57,6 +61,8 @@
 	<signal.h>
 	<algorithm>
 	<stdio.h>
+	<map>
+	<functional>
 	"function.h"
 
 1717910015 source:e:\tailieubachkhoa\hdh\shellproject_hdh\myshell\variables.cpp
