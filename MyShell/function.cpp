@@ -49,11 +49,11 @@ void tiny_help(string inst) {
         cout << color[5] << cmdLst[i] << "\t-\t" << instuctionLst[i] << defaultCor << "\n";
     }
     cout << "\n";
-    cout << color[5];
-    cout << color[5] << "Run mode: \n";
+    cout << color[5] << "<cmd line>" << "\t" << "Execute command line in PATH" << "\n";
+    cout << "\n";
+    cout << color[2] << "Run mode: \n";
     cout << color[5] << "-f" << "\t-\t" << "Run a process in foreground mode" << "\n";
     cout << color[5] << "-b" << "\t-\t" << "Run a process in background mode" << "\n";
-    cout << color[5] << "<cmd line: >" << "\t-\t" << "Execute command line in PATH" << "\n";
     cout << defaultCor;
 }
 
