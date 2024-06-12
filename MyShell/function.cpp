@@ -428,7 +428,7 @@ void _delete(string inst) {
         return;
     }
     string filePath = args[1];
-    if (filePath[1] != ':') filePath = currentDir + filePath;
+    if (filePath[1] != ':') filePath = currentDir +"\\"+ filePath;
     if (DeleteFile(filePath.c_str())) {
         cout << color[2] << "File " << filePath << " deleted successfully" << defaultCor << "\n";
     } else {
