@@ -73,8 +73,8 @@ void _time() {
     else if(ans[0] == 'n') {}
     else {
     int hour, minute, second;
-    cout << "Enter new time: (hour : min : sec) ";
-    cin >> hour >> minute >> second;
+    cout << "Enter new time (hour:min:sec): ";
+    scanf("%d:%d:%d", &hour, &minute, &second);
     char c = getchar();
     if ( c== '\n' || c == EOF){}
     st.wHour = hour;
@@ -90,7 +90,7 @@ void _time() {
 
     int day, month, year;
     cout << "Enter new date (dd/mm/yyyy):";
-    cin >> day >> month >> year;
+    scanf("%d/%d/%d", &day, &month, &year);
     c = getchar();
     if (c == '\n' || c == EOF){}
     st.wDay = day;
