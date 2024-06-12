@@ -180,6 +180,10 @@ void shell_execute_single(string command) {
         _move(command);
         return;
     }
+    if (strncmp(command_chr, "echo", 4) == 0) {  
+        _echo(command);
+        return;
+    }
     cout << errorMsg << "Invalid command" << defaultCor << "\n";
     cout << color[2] << "Please use 'help' command for more information" << defaultCor << "\n";
 }
