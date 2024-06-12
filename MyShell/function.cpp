@@ -22,13 +22,15 @@ void _help() {
     slow_type("WELCOME TO OUR SHELL PROJECT\n");
     cout <<   "############################\n";
     slow_type("Here is the list of instructions:\n\n");
-    int run = 0;
     for (int i = 0; i < NUMBER_OF_COMMANDS; ++ i) {
-        cout << color[run] << cmdLst[i] << "\t-\t" << instuctionLst[i] << defaultCor << "\n";
-        run = (run + 1) % 6;
+        cout << color[5] << cmdLst[i] << "\t-\t" << instuctionLst[i] << defaultCor << "\n";
     }
+    cout << "\n";
+    cout << color[5];
+    cout << color[5] << "Run mode: \n";
+    cout << color[5] << "-f" << "\t-\t" << "Run a process in foreground mode" << "\n";
+    cout << color[5] << "-b" << "\t-\t" << "Run a process in background mode" << "\n";
     cout << defaultCor;
-    return;
 }
 
 /*
@@ -38,6 +40,7 @@ void _exit() {
     cout << color[0];
     cout << "*** Exit tinyShell ***" << "\n";
     cout << defaultCor;
+    Sleep(3000);
     shellStatus = false;
     // Dong tat ca cac process/thread dang thuc hien
     for (int i = (int) listProcess.size() - 1; i >= 0; -- i) {
@@ -80,7 +83,7 @@ void _time() {
         }
     }
 
-    int day,month,year;
+    int day, month, year;
     printf("Enter new date (dd/mm/yyyy): ");
     if (scanf("%d/%d/%d", &day, &month, &year) == 3) {
         st.wDay = day;
@@ -95,19 +98,7 @@ void _time() {
     } else {
         printf("Invalid date format. Please use dd/mm/yyyy.\n");
     }
-
-}
-
-
-
-/*
-    Ham tra lai path hien tai
-*/
-string getPath() {
-    char buff[MAX_PATH];
-    int n = GetCurrentDirectory(MAX_PATH, buff);
-    if (n) return buff;
-    return "";
+    fflush(stdout);
 }
 
 /*
@@ -116,7 +107,7 @@ string getPath() {
 void _dir(string inst) {
     vector<string> args = split_space(inst);
     string path;
-    if (sz(args) < 2) path = getPath();
+    if (sz(args) < 2) path = currentDir;
     else path = args[1];
     cout << color[2];
     cout << "\t Directory: " << path << "\n\n";
@@ -150,7 +141,7 @@ void _dir(string inst) {
 */
 void _pwd() {
     cout << color[2];
-    cout << "Current working directory: " << getPath() << "\n";
+    cout << "Current working directory: " << currentDir << "\n";
     cout << defaultCor;
 }
 
@@ -169,88 +160,18 @@ void _cat(string inst) {
     vector<string> args = split_space(inst);
     if (sz(args) != 2) {
         cout << errorMsg << "Invalid option" << defaultCor << "\n";
-        cout << usageMsg << "cat <path-to-file>" << defaultCor << "\n";
+        cout << usageMsg << "cat <PATH_TO_FILE>" << defaultCor << "\n";
         return;
-    }else{
-        
-    
-        string path = args[1];
-        string tail = path.substr(path.length()-3,3);
-        // cout << tail << endl;
-        if(tail != "bat" && tail != "txt"){
-            cout << errorMsg << "Invalid option" << defaultCor << "\n";
-            cout << usageMsg << "cat <path-to-file>" << defaultCor << "\n";
-            return;
-        }
-        ifstream myFile(path);
-        if (myFile.is_open()) {
-            string line;
-            cout << color[4];
-            while(getline(myFile, line)) {
-                cout << line << "\n";
-            }
-            cout << defaultCor;
-            myFile.close();
-        } else {
-            cout << errorMsg << "Unable to open file" << defaultCor << "\n";
-        }
     }
-}
-
-/*
-    Chay tung dong trong file .bat
-*/
-void runDotBat(string fileName) {
-    ifstream myFile(fileName);
+    string path = args[1];
+    if (path[1] != ':') path = currentDir + "\\" + path;
+    ifstream myFile(path);
     if (myFile.is_open()) {
         string line;
+        cout << color[4];
         while(getline(myFile, line)) {
-            line = remove_space(line);
-            shell_execute_single(line);
+            cout << line << "\n";
         }
-    } else {
-        cout << errorMsg << "Unable to open file" << defaultCor << "\n";
-    }
-}
-
-/*
-    Tach dong lenh thanh cac arguments
-*/
-vector<string> split_space(string inst) {
-    vector<string> args;
-    string s = "";
-    inst += " ";
-    for (int i = 0; i < sz(inst); ++ i) {
-        if (inst[i] == ' ') {
-            if (s != "") args.push_back(s), s = "";
-        } else s += inst[i];
-    }
-    return args;
-}
-
-/*
-    Doan nay da het bug :))
-    Check ctrl-C co duoc press ko bang signal
-*/
-
-//void my_handler(sig_atomic_t s) {
-//    TerminateProcess(fgProcess.pi.hProcess, 0);
-//    CloseHandle(fgProcess.pi.hProcess);
-//    CloseHandle(fgProcess.pi.hThread);
-//    cout << "Process killed..." << "\n";
-//}
-
-BOOL WINAPI CtrlHandler(DWORD fdwCtrlType) {
-    switch (fdwCtrlType) {
-        case CTRL_C_EVENT:
-            cout << color[4] << "Ctrl-C pressed. Terminating process..." << defaultCor  << "\n";
-            TerminateProcess(fgProcess.pi.hProcess, 0);
-            CloseHandle(fgProcess.pi.hProcess);
-            CloseHandle(fgProcess.pi.hThread);
-            return TRUE;
-
-        default:
-            return FALSE;
     }
 }
 
@@ -258,9 +179,8 @@ BOOL WINAPI CtrlHandler(DWORD fdwCtrlType) {
     Chay file .exe va file .bat
 */
 void _run(string inst) {
-
+    vector<string> args = split_space(inst);
     if (strstr(inst.c_str(), ".bat") != NULL) {
-        vector<string> args = split_space(inst);
         if (sz(args) != 2) {
             cout << errorMsg << "Invalid option" << defaultCor << "\n";
             cout << color[5] << "USAGE for .bat: run <batFile>" << defaultCor << "\n";
@@ -269,7 +189,6 @@ void _run(string inst) {
         string fileName = args[1];
         runDotBat(fileName);
     } else if (strstr(inst.c_str(), ".exe") != NULL) {
-        vector<string> args = split_space(inst);
         if (sz(args) != 3 || (args[1] != "-f" && args[1] != "-b")) {
             cout << errorMsg << "Invalid option" << defaultCor << "\n";
             cout << color[5] << "USAGE for .exe: run <OPTION> <exeFile>" << "\n";
@@ -283,9 +202,17 @@ void _run(string inst) {
         ZeroMemory(&si, sizeof(si));
         si.cb = sizeof(si);
         string exeFile = args[2];
-        CreateProcess(exeFile.c_str(), NULL, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, (LPSTARTUPINFOA) &si, &pi);
+        CreateProcess((currentDir + "\\" + exeFile).c_str(), NULL, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, (LPSTARTUPINFOA) &si, &pi);
         if (pi.dwProcessId == 0) {
-            cout << "ERROR: File does not exist" << "\n";
+            for (auto path : shell_path) {
+                ZeroMemory(&si, sizeof(si));
+                si.cb = sizeof(si);
+                CreateProcess((path + "\\" + exeFile).c_str(), NULL, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, (LPSTARTUPINFOA) &si, &pi);
+                if (pi.dwProcessId) break;
+            }
+        }
+        if (pi.dwProcessId == 0) {
+            cout << errorMsg << "File does not exist." << defaultCor << "\n";
             return;
         }
 
@@ -384,28 +311,10 @@ void _kill(string inst) {
 }
 
 /*
-    lay file name tu mot cai path dai
-    C:/abc/xyz/cde.exe -> cde.exe
-*/
-
-string getFileName(string dir) {
-    if (dir[1] != ':') return dir;
-    int cnt = 0;
-    int len = sz(dir);
-    for (int i = len - 1; i >= 0; -- i) {
-        if (dir[i] == (TCHAR) '\\') {
-            len = i;
-            break;
-        }
-        cnt ++;
-    }
-    return dir.substr(len + 1, cnt);
-}
-
-/*
     Hien thi tat ca cac process dang chay ngam
 */
 void _list() {
+    cout << color[2];
     cout << "\tID\t\t\tNAME\t\t\tSTATUS\n\n";
     for (int i = listProcess.size() - 1; i >= 0; -- i) {
         int processID = listProcess[i].id;
@@ -430,18 +339,24 @@ void _list() {
         cout << setw(27) << (c.status == 0 ? "running":"stopped");
         cout << "\n";
     }
+    cout << defaultCor;
 }
 
-// https://stackoverflow.com/questions/18719571/getting-system-env-in-c-from-windows
+/*
+    bien PATH trong shell hien tai 
+*/
 void _path() {
-    char *path_str = getenv("PATH");
-    if (path_str)
-        cout << color[2] << "Value of PATH is: \n" + string(path_str) << defaultCor << "\n";
-    else
-        cout << errorMsg << "Empty or not defined" << defaultCor << "\n";
+    cout << color[2];
+    cout << "Value of PATH is:\n";
+    for (auto path : shell_path) {
+        cout << path << "\n";
+    }
+    cout << defaultCor;
 }
 
-// Document: https://stackoverflow.com/questions/63534708/append-to-a-user-environment-variable-with-regsetvalueex-in-c
+/*
+    Khong anh huong den system va chi tac dong trong shell, PATH se reset lai ban dau (init_shell_path) khi khoi tao shell moi
+*/
 void _addpath(string inst) {
     vector<string> args = split_space(inst);
     if (sz(args) != 2) {
@@ -449,46 +364,24 @@ void _addpath(string inst) {
         cout << usageMsg << "addpath <NEW_PATH>" << defaultCor << "\n";
         return;
     }
-    // Open the registry key where the PATH environment variable is stored
-    HKEY hKey;
-    if (RegOpenKeyExA(HKEY_CURRENT_USER, "Environment", 0, KEY_READ | KEY_WRITE, &hKey) != ERROR_SUCCESS) {
-        cout << errorMsg << "Failed to open registry key." << defaultCor << "\n";
+    string new_path = args[1];
+    if (!checkDir(new_path)) {
+        cout << errorMsg << "Invalid path" << defaultCor << "\n";
         return;
     }
-    // Read the current PATH variable
-    char currentPath[1024];
-    DWORD bufferSize = sizeof(currentPath);
-    if (RegQueryValueExA(hKey, "Path", NULL, NULL, (LPBYTE)currentPath, &bufferSize) != ERROR_SUCCESS) {
-        cout << errorMsg << "ERROR: Failed to read current PATH." << defaultCor << endl;
-        RegCloseKey(hKey);
-        return;
+    for (auto c : shell_path) {
+        if (c == new_path) {
+            cout << color[2] << "Path already exists in PATH variable." << defaultCor << "\n";
+            return;
+        }
     }
-    string updatedPath = string(currentPath) + ";" + args[1];
-    // Write the updated PATH back to the registry
-    if (RegSetValueExA(hKey, "Path", 0, REG_EXPAND_SZ, (const BYTE*)updatedPath.c_str(), updatedPath.size() + 1) != ERROR_SUCCESS) {
-        cerr << errorMsg << "Failed to update PATH." << defaultCor << "\n";
-    } else {
-        cout << color[2] << "PATH updated successfully." << defaultCor << "\n";
-    }
-
-    RegCloseKey(hKey);
-    SendMessageTimeoutA(HWND_BROADCAST, WM_SETTINGCHANGE, 0, (LPARAM)"Environment", SMTO_ABORTIFHUNG, 5000, NULL);
+    shell_path.push_back(new_path);
+    cout << color[2] << "PATH updated successfully." << defaultCor << "\n";
 }
 
 /*
-    Ham lay thu muc cha
+    chuyen directory
 */
-
-string getPreviousPath(string dir) {
-    int len = dir.size();
-    for (int i = len - 1; i >= 0; -- i) {
-        if (dir[i] == (TCHAR) '\\') {
-            len = i;
-            break;
-        }
-    }
-    return dir.substr(0, len);
-}
 
 void _cd(string inst) {
     vector<string> args = split_space(inst);
@@ -503,20 +396,20 @@ void _cd(string inst) {
     }
     if (new_dir == "..") {
         new_dir = getPreviousPath(currentDir);
-        if (!SetCurrentDirectory(new_dir.c_str())) {
+        if (!checkDir(new_dir)) {
             cout << errorMsg << "Invalid directory" << defaultCor << "\n";
         } else {
             currentDir = new_dir;
         }
     } else if (new_dir[1] == ':') { // new dir
-        if (!SetCurrentDirectory(new_dir.c_str())) {
+        if (!checkDir(new_dir)) {
             cout << errorMsg << "Invalid directory" << defaultCor << "\n";
         } else {
             currentDir = new_dir;
         }
     } else { // sub dir
         new_dir = currentDir + "\\" + new_dir;
-        if (!SetCurrentDirectory(new_dir.c_str())) {
+        if (!checkDir(new_dir)) {
             cout << errorMsg << "Invalid directory" << defaultCor << "\n";
         } else {
             currentDir = new_dir;
@@ -542,10 +435,11 @@ void _delete(string inst) {
     vector<string> args = split_space(inst);
     if (sz(args) != 2) {
         cout << errorMsg << "Invalid option" << defaultCor << "\n";
-        cout << usageMsg << "delete <path-to-file>" << defaultCor << "\n";
+        cout << usageMsg << "delete <PATH_TO_FILE>" << defaultCor << "\n";
         return;
     }
     string filePath = args[1];
+    if (filePath[1] != ':') filePath = currentDir + filePath;
     if (DeleteFile(filePath.c_str())) {
         cout << color[2] << "File " << filePath << " deleted successfully" << defaultCor << "\n";
     } else {
@@ -557,7 +451,7 @@ void _move(string inst) {
     size_t pos = inst.find('>');
     if (pos == string::npos) {
         cout << errorMsg << "Invalid command format" << defaultCor << "\n";
-        cout << usageMsg << "move <source> > <destination>" << defaultCor << "\n";
+        cout << usageMsg << "move <SOURCE> > <DESTINATION>" << defaultCor << "\n";
         return;
     }
     string source = inst.substr(5, pos-5); // source duoc lay tu source trong lenh "move source > destination"
