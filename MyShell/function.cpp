@@ -120,9 +120,9 @@ void tiny_time(string inst) {
     st.wMonth = month;
     st.wYear = year;
         if (SetLocalTime(&st)) {
-            cout << "Date successfully updated";
+            cout << "Date successfully updated\n";
         } else {
-            cout << "Failed to update date";
+            cout << "Failed to update date\n";
         }
     }
 }
@@ -231,15 +231,15 @@ void tiny_run(string inst) {
         PROCESS_INFORMATION pi;
         ZeroMemory(&si, sizeof(si));
         si.cb = sizeof(si);
-        int console_type = 0;
-        if (args[1] == "-b") console_type = CREATE_NEW_CONSOLE;
+//        int console_type = 0;
+//        if (args[1] == "-b") console_type = CREATE_NEW_CONSOLE;
         string exeFile = args[2];
-        CreateProcess((currentDir + "\\" + exeFile).c_str(), NULL, NULL, NULL, FALSE, console_type, NULL, NULL, (LPSTARTUPINFOA) &si, &pi);
+        CreateProcess((currentDir + "\\" + exeFile).c_str(), NULL, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, (LPSTARTUPINFOA) &si, &pi);
         if (pi.dwProcessId == 0) {
             for (auto path : shell_path) {
                 ZeroMemory(&si, sizeof(si));
                 si.cb = sizeof(si);
-                CreateProcess((path + "\\" + exeFile).c_str(), NULL, NULL, NULL, FALSE, console_type, NULL, NULL, (LPSTARTUPINFOA) &si, &pi);
+                CreateProcess((path + "\\" + exeFile).c_str(), NULL, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, (LPSTARTUPINFOA) &si, &pi);
                 if (pi.dwProcessId) break;
             }
         }
@@ -441,7 +441,7 @@ void tiny_cd(string inst) {
         }
     } else { // sub dir
         new_dir = currentDir + "\\" + new_dir;
-        if (!checkDir(new_dir)) {
+        if (!checkDir(new_dir) || !SetCurrentDirectory(new_dir.c_str())) {
             cout << errorMsg << "Invalid directory" << defaultCor << "\n";
         } else {
             currentDir = new_dir;
@@ -465,23 +465,28 @@ void tiny_delete(string inst) {
 }
 
 void tiny_move(string inst) {
-    size_t pos = inst.find('>');
-    if (pos == string::npos) {
+    vector<string> args = split_space(inst);
+    if (sz(args) != 4 || args[2] != ">") {
         cout << errorMsg << "Invalid command format" << defaultCor << "\n";
-        cout << usageMsg << "move <SOURCE> > <DESTINATION>" << defaultCor << "\n";
+        cout << usageMsg << "move <SRC> > <DEST>" << defaultCor << "\n";
         return;
     }
-    string source = inst.substr(5, pos-5); // source duoc lay tu source trong lenh "move source > destination"
-    string destination = inst.substr(pos + 1);
+    string src = args[1];
+    string dest = args[3];
+    if (dest == ".") dest = currentDir;
+    else if (dest == "..") dest = getPreviousPath(currentDir);
+    else if (dest[1] != ':') dest = currentDir + "\\" + dest;
+    if (src[1] != ':') src = currentDir + "\\" + src;
+    if (!checkDir(dest)) {
+        cout << errorMsg << dest << " is not a directory" << defaultCor << "\n";
+        return;
+    }
+    string target = dest + "\\" + getFileName(src);
 
-    source = remove_space(source);
-    destination = remove_space(destination);
-
-
-    if (MoveFile(source.c_str(), destination.c_str())) {
-        cout << color[2] << "File moved from " << source << " to " << destination << " successfully" << defaultCor << "\n";
+    if (MoveFileEx(src.c_str(), target.c_str(), MOVEFILE_REPLACE_EXISTING)) {
+        cout << color[2] << "Move " << src << " to " << dest << " successfully" << defaultCor << "\n";
     } else {
-        cout << errorMsg << "Unable to move file from " << source << " to " << destination << defaultCor << "\n";
+        cout << errorMsg << "Unable to move " << src << " to " << dest << defaultCor << "\n";
     }
 }
 
