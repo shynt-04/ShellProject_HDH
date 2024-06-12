@@ -456,3 +456,18 @@ void _move(string inst) {
         cout << errorMsg << "Unable to move file from " << source << " to " << destination << defaultCor << "\n";
     }
 }
+
+// vong lai
+void _echo(string inst){
+    vector<string>args = split_space(inst);
+    if(size(args) < 2){
+        cout << "echo is on";
+        return;
+    }else{
+        auto it = args.begin() +1;
+        for( ; it != args.end() ; it++){
+            cout << *it << " " ;
+        }
+        return;
+    }
+}
