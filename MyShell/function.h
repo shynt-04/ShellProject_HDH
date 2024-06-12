@@ -43,11 +43,12 @@ inline string usageMsg = color[5] + "USAGE: ";
 inline string cmdLst[NUMBER_OF_COMMANDS] = {
     "help",
     "exit",
+    "cd",
     "time",
     "dir",
     "pwd",
-    "cat",
     "clear",
+    "cat",
     "run",
     "stop",
     "resume",
@@ -55,20 +56,19 @@ inline string cmdLst[NUMBER_OF_COMMANDS] = {
     "list",
     "path",
     "addpath",
-    "cd",
     "delete",
     "move"
-
 };
 
 inline string instuctionLst[NUMBER_OF_COMMANDS] = {
     "provide information to shell commands",
     "exit shell",
     "display current date and time",
+    "change current directory",
     "display a list of files and subdirectories in current directory",
     "display path to current directory",
-    "display content of specified file",
     "clear screen",
+    "display content of specified file",
     "execute .bat file or start a new process to run .exe file",
     "stop a process permanently",
     "resume a stopped process",
@@ -76,7 +76,6 @@ inline string instuctionLst[NUMBER_OF_COMMANDS] = {
     "list all background processes",
     "get environment PATH variable",
     "add environment PATH variable",
-    "change current directory",
     "delete a file",
     "move a file to other directory"
 };
