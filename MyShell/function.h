@@ -45,8 +45,8 @@ inline string usageMsg = color[5] + "USAGE: ";
 inline string cmdLst[NUMBER_OF_COMMANDS] = {
     "help",
     "exit",
-    "cd",
     "time",
+    "cd",
     "dir",
     "pwd",
     "clear",
