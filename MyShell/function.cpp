@@ -27,7 +27,11 @@ void _help() {
         cout << color[run] << cmdLst[i] << "\t-\t" << instuctionLst[i] << defaultCor << "\n";
         run = (run + 1) % 6;
     }
-    cout << defaultCor;
+    cout << "\n";
+    cout << color[2];
+    cout << color[2] << "Run mode: \n";
+    cout << color[2] << "-f" << "\t-\t" << "Run a process in foreground mode" << "\n";
+    cout << color[2] << "-b" << "\t-\t" << "Run a process in background mode" << "\n";
     return;
 }
 
