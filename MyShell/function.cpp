@@ -504,20 +504,24 @@ void tiny_echo(string inst){
     chay exe co trong PATH
 */
 int tiny_run_exe_in_PATH(string inst) {
+    vector<string> args = split_space(inst);
     STARTUPINFO si;
     PROCESS_INFORMATION pi;
     ZeroMemory(&si, sizeof(si));
     si.cb = sizeof(si);
-    CreateProcess(NULL, const_cast<char *>((path + "\\" + inst).c_str), NULL, NULL, FALSE, 0, NULL, NULL, (LPSTARTUPINFOA) &si, &pi);
+    CreateProcess(NULL, const_cast<char *>((currentDir + "\\" + inst).c_str()), NULL, NULL, FALSE, 0, NULL, NULL, (LPSTARTUPINFOA) &si, &pi);
     for (auto path : shell_path) {
         ZeroMemory(&si, sizeof(si));
         si.cb = sizeof(si);
-        CreateProcess(NULL, const_cast<char *>((path + "\\" + inst).c_str), NULL, NULL, FALSE, 0, NULL, NULL, (LPSTARTUPINFOA) &si, &pi);
+        CreateProcess(NULL, const_cast<char *>((path + "\\" + inst).c_str()), NULL, NULL, FALSE, 0, NULL, NULL, (LPSTARTUPINFOA) &si, &pi);
         if (pi.dwProcessId) break;
     }
+    if (pi.dwProcessId == 0) return 0;
+    fgProcess = {pi.dwProcessId, args[0], 0, pi};
     SetConsoleCtrlHandler(CtrlHandler, TRUE);
     WaitForSingleObject(pi.hProcess, INFINITE);
     TerminateProcess(pi.hProcess, 0);
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
+    return 1;
 }
