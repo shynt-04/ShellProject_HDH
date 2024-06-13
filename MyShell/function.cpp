@@ -222,7 +222,7 @@ void tiny_run(string inst) {
     } else if (strstr(inst.c_str(), ".exe") != NULL) {
         if (sz(args) < 3 || (args[1] != "-f" && args[1] != "-b")) {
             cout << errorMsg << "Invalid option" << defaultCor << "\n";
-            cout << color[5] << "USAGE for .exe: run <OPTION> <exeFile> <ARGUMENT_1> <ARGUMENT_2>" << "\n";
+            cout << color[5] << "USAGE for .exe: run <OPTION> <exeFile>" << "\n";
             cout << "OPTION for .exe:" << "\n";
             cout << "  -f: foreground mode" << "\n";
             cout << "  -b: background mode" << defaultCor << "\n";
@@ -235,14 +235,18 @@ void tiny_run(string inst) {
 //        int console_type = 0;
 //        if (args[1] == "-b") console_type = CREATE_NEW_CONSOLE;
         string exeFile = args[2];
-        CreateProcess((currentDir + "\\" + exeFile).c_str(), NULL, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, (LPSTARTUPINFOA) &si, &pi);
-        if (pi.dwProcessId == 0) {
-            for (auto path : shell_path) {
-                ZeroMemory(&si, sizeof(si));
-                si.cb = sizeof(si);
-                CreateProcess((path + "\\" + exeFile).c_str(), NULL, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, (LPSTARTUPINFOA) &si, &pi);
-                if (pi.dwProcessId) break;
+        if (exeFile[1] != ':') {
+            CreateProcess((currentDir + "\\" + exeFile).c_str(), NULL, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, (LPSTARTUPINFOA) &si, &pi);
+            if (pi.dwProcessId == 0) {
+                for (auto path : shell_path) {
+                    ZeroMemory(&si, sizeof(si));
+                    si.cb = sizeof(si);
+                    CreateProcess((path + "\\" + exeFile).c_str(), NULL, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, (LPSTARTUPINFOA) &si, &pi);
+                    if (pi.dwProcessId) break;
+                }
             }
+        } else {
+            CreateProcess(exeFile.c_str(), NULL, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, (LPSTARTUPINFOA) &si, &pi);
         }
         if (pi.dwProcessId == 0) {
             cout << errorMsg << "File does not exist." << defaultCor << "\n";
