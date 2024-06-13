@@ -494,7 +494,7 @@ void tiny_move(string inst) {
 // vong lai
 void tiny_echo(string inst){
     vector<string>args = split_space(inst);
-    if(size(args) < 2){
+    if(sz(args) < 2){
         cout << "echo is on";
         return;
     }else{
@@ -525,9 +525,9 @@ int tiny_run_exe_in_PATH(string inst) {
     if (pi.dwProcessId == 0) return 0;
     fgProcess = {pi.dwProcessId, args[0], 0, pi};
     SetConsoleCtrlHandler(CtrlHandler, TRUE);
-    WaitForSingleObject(pi.hProcess, INFINITE);
+    WaitForSingleObject(pi.hProcess, -1);
     TerminateProcess(pi.hProcess, 0);
-    CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
+    CloseHandle(pi.hProcess);
     return 1;
 }

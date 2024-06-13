@@ -191,7 +191,6 @@ string getFileName(string dir) {
 BOOL WINAPI CtrlHandler(DWORD fdwCtrlType) {
     switch (fdwCtrlType) {
         case CTRL_C_EVENT:
-            cout << color[4] << "Ctrl-C pressed. Terminating process..." << defaultCor  << "\n";
             TerminateProcess(fgProcess.pi.hProcess, 0);
             CloseHandle(fgProcess.pi.hProcess);
             CloseHandle(fgProcess.pi.hThread);
