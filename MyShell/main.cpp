@@ -143,8 +143,10 @@ vector<string> split_space(string inst) {
     vector<string> args;
     string s = "";
     inst += " ";
+    int have_quotes = 0;
     for (int i = 0; i < sz(inst); ++ i) {
-        if (inst[i] == ' ') {
+        if (inst[i] == '"' || inst[i] == '\'') have_quotes ^= 1;
+        else if (inst[i] == ' ' && have_quotes == 0) {
             if (s != "") args.push_back(s), s = "";
         } else s += inst[i];
     }
