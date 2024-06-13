@@ -7,7 +7,7 @@
 
 3. Run command `g++ main.cpp function.cpp -o tinyShell.exe -Wall -std=gnu++17`
 
-4. Run `tinyShell.exe`
+4. Run `tinyShell.exe` (or `tinyShell_static.exe` if you do not have gcc-lib)
 
 ## Command instruction
 
