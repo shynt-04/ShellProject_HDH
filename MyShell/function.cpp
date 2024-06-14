@@ -211,10 +211,10 @@ void tiny_cat(string inst) {
 */
 void tiny_run(string inst) {
     vector<string> args = split_space(inst);
-    if (strstr(inst.c_str(), ".bat") != NULL) {
+    if (sz(args) == 2) {
         if (sz(args) != 2) {
             cout << errorMsg << "Invalid option" << defaultCor << "\n";
-            cout << color[5] << "USAGE for .bat: run <batFile>" << defaultCor << "\n";
+            cout << color[5] << "USAGE for bat file: run <batFile>" << defaultCor << "\n";
             return;
         }
         string fileName = args[1];
